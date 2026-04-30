@@ -1,0 +1,16 @@
+# Dev artifacts (only needed if you rebuild assets/tailwind.css)
+node_modules/
+package-lock.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Per-user state — never commit (contains your email)
+seller-defaults.json
+
+# Test / generated proposals (live in user working dirs, not the skill repo)
+proposals/
+
+# Vercel local state (if anyone runs vercel from this dir)
+.vercel/

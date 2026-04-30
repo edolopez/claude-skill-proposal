@@ -1,0 +1,270 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ProposalDiscovery",
+  "description": "Persisted discovery answers for a single client proposal. Saved to proposals/{slug}/discovery.json so revisions don't require re-interviewing.",
+  "type": "object",
+  "required": ["client", "champion", "situation", "outcome", "approach", "deliverables", "timeline", "investment", "next_step", "company"],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1.0" },
+    "industry": {
+      "type": "string",
+      "enum": ["saas", "agency_creative", "professional_services", "consulting", "implementation", "ecommerce", "other"],
+      "description": "Drives section emphasis: saas → ARR/MRR & seats; agency → retainer & deliverables count; services → phases & milestones."
+    },
+    "locale": {
+      "type": "object",
+      "properties": {
+        "language": { "type": "string", "default": "en", "examples": ["en", "es", "fr", "pt"] },
+        "currency": { "type": "string", "default": "USD", "examples": ["USD", "EUR", "GBP", "MXN"] },
+        "currency_symbol": { "type": "string", "default": "$" },
+        "date_format": { "type": "string", "enum": ["YYYY-MM-DD", "DD/MM/YYYY", "MM/DD/YYYY"], "default": "YYYY-MM-DD" }
+      }
+    },
+    "client": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string" },
+        "website": { "type": "string", "format": "uri" },
+        "logo_url": { "type": "string", "format": "uri" }
+      }
+    },
+    "champion": {
+      "type": "object",
+      "required": ["name", "title", "email"],
+      "properties": {
+        "name": { "type": "string" },
+        "title": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "stakeholders": {
+          "type": "array",
+          "description": "Who else needs to say yes — the people the champion will defend the proposal to.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "role": { "type": "string", "examples": ["CFO", "CTO", "Board", "Legal", "Procurement"] },
+              "likely_objection": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "brand": {
+      "type": "object",
+      "properties": {
+        "primary": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+        "accent": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+        "source": { "type": "string", "enum": ["css_extraction", "theme_color_meta", "og_image", "logo_svg", "user_provided", "default"] }
+      }
+    },
+    "project": {
+      "type": "object",
+      "required": ["codename"],
+      "properties": {
+        "codename": { "type": "string" },
+        "valid_until_date": { "type": "string", "format": "date" },
+        "proposal_date": { "type": "string", "format": "date" },
+        "version": { "type": "integer", "default": 1 },
+        "reference": { "type": "string", "description": "Internal reference, e.g., PRO-2026-0421" }
+      }
+    },
+    "situation": {
+      "type": "object",
+      "description": "The problem in their words. Required to be the buyer's actual quote, not paraphrased.",
+      "required": ["problem_in_buyer_words"],
+      "properties": {
+        "problem_in_buyer_words": { "type": "string", "minLength": 30 },
+        "buyer_quote": { "type": "string", "description": "A direct quote from the call/email — used as a pull quote in the template." },
+        "buyer_quote_source": { "type": "string", "examples": ["discovery call 2026-04-22", "intro email 2026-04-15"] },
+        "current_pain_cost": { "type": "string", "description": "What's the cost of NOT doing this? Lost revenue, time, risk?" },
+        "what_they_tried": { "type": "string", "description": "Prior attempts that failed. Helps pre-empt 'we tried this before' objection." }
+      }
+    },
+    "outcome": {
+      "type": "object",
+      "required": ["headline", "metrics"],
+      "properties": {
+        "headline": { "type": "string" },
+        "intro": { "type": "string" },
+        "metrics": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "items": {
+            "type": "object",
+            "required": ["metric", "label"],
+            "properties": {
+              "metric": { "type": "string", "description": "e.g., '40%', '12 weeks', '$1.2M', '3x'" },
+              "label": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "approach": {
+      "type": "object",
+      "required": ["intro", "phases"],
+      "properties": {
+        "intro": { "type": "string" },
+        "phases": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 5,
+          "items": {
+            "type": "object",
+            "required": ["name", "duration", "what", "why"],
+            "properties": {
+              "name": { "type": "string" },
+              "duration": { "type": "string", "examples": ["2 weeks", "Month 2-3"] },
+              "what": { "type": "string" },
+              "why": { "type": "string", "description": "The thinking behind ordering this phase here. This pre-empts 'why this approach'." }
+            }
+          }
+        }
+      }
+    },
+    "deliverables": {
+      "type": "object",
+      "required": ["items"],
+      "properties": {
+        "items": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 14,
+          "items": {
+            "type": "object",
+            "required": ["name", "count", "detail"],
+            "properties": {
+              "name": { "type": "string" },
+              "count": { "type": "string", "examples": ["1×", "Weekly", "Up to 3"] },
+              "detail": { "type": "string" }
+            }
+          }
+        },
+        "out_of_scope": { "type": "string", "description": "Explicit exclusions. Pre-empts scope-creep risk for the buyer." }
+      }
+    },
+    "timeline": {
+      "type": "object",
+      "required": ["total_duration", "milestones"],
+      "properties": {
+        "total_duration": { "type": "string", "examples": ["8 weeks", "Q3 2026"] },
+        "intro": { "type": "string" },
+        "milestones": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 8,
+          "items": {
+            "type": "object",
+            "required": ["date", "name"],
+            "properties": {
+              "date": { "type": "string" },
+              "name": { "type": "string" },
+              "detail": { "type": "string" }
+            }
+          }
+        },
+        "dependencies": { "type": "string", "description": "What could shift the timeline. Forces honest scoping." }
+      }
+    },
+    "investment": {
+      "type": "object",
+      "required": ["model", "tiers"],
+      "properties": {
+        "model": { "type": "string", "enum": ["fixed", "time_and_materials", "retainer", "tiered", "subscription"] },
+        "tiers": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "items": {
+            "type": "object",
+            "required": ["name", "headline_price", "includes"],
+            "properties": {
+              "name": { "type": "string" },
+              "description": { "type": "string" },
+              "headline_price": { "type": "string", "description": "Pre-formatted, e.g., '$48,000', '€3,500/mo'" },
+              "terms": { "type": "string", "examples": ["one-time", "/month", "+ usage"] },
+              "includes": { "type": "array", "items": { "type": "string" } },
+              "is_recommended": { "type": "boolean", "default": false }
+            }
+          }
+        },
+        "payment_terms": { "type": "string", "examples": ["50% on signing, 50% on delivery", "Net-30, monthly"] },
+        "scope_change_policy": { "type": "string" }
+      }
+    },
+    "why_us": {
+      "type": "object",
+      "required": ["headline", "case_studies"],
+      "properties": {
+        "headline": { "type": "string" },
+        "intro": { "type": "string" },
+        "case_studies": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "items": {
+            "type": "object",
+            "required": ["client", "narrative", "result_metric"],
+            "properties": {
+              "client": { "type": "string", "description": "Named client (with permission) — generic logos don't count." },
+              "industry": { "type": "string" },
+              "narrative": { "type": "string" },
+              "result_metric": { "type": "string" },
+              "result_label": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "risks": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "required": ["name", "mitigation"],
+        "properties": {
+          "name": { "type": "string" },
+          "detail": { "type": "string" },
+          "mitigation": { "type": "string" }
+        }
+      }
+    },
+    "next_step": {
+      "type": "object",
+      "required": ["headline", "cta_label"],
+      "properties": {
+        "headline": { "type": "string" },
+        "detail": { "type": "string" },
+        "cta_label": { "type": "string", "examples": ["Accept proposal", "Book kickoff", "Sign and start Monday"] },
+        "cta_mode": { "type": "string", "enum": ["mailto", "calendly", "webhook", "external"], "default": "mailto" },
+        "cta_url": { "type": "string", "description": "If mode=mailto, generated automatically. If calendly, the booking URL. If webhook, the seller's webhook URL (Resend, Slack, Zapier)." }
+      }
+    },
+    "terms": {
+      "type": "object",
+      "description": "Optional T&C appendix — collapsible in the rendered template.",
+      "properties": {
+        "include": { "type": "boolean", "default": false },
+        "ip_ownership": { "type": "string" },
+        "confidentiality": { "type": "string" },
+        "termination": { "type": "string" },
+        "governing_law": { "type": "string" },
+        "additional_clauses": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "company": {
+      "type": "object",
+      "required": ["name", "seller_name", "seller_email"],
+      "properties": {
+        "name": { "type": "string" },
+        "tagline": { "type": "string" },
+        "logo_url": { "type": "string" },
+        "seller_name": { "type": "string" },
+        "seller_title": { "type": "string" },
+        "seller_email": { "type": "string", "format": "email" }
+      }
+    }
+  }
+}

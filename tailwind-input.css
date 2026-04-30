@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    font-feature-settings: 'ss01', 'cv11';
+  }
+}
+
+@layer components {
+  .display {
+    font-family: 'Fraunces', ui-serif, Georgia, serif;
+    font-optical-sizing: auto;
+    letter-spacing: -0.02em;
+  }
+  .rule {
+    height: 1px;
+    background: linear-gradient(to right, transparent, #e5e7eb, transparent);
+  }
+  .num-marker {
+    font-variant-numeric: tabular-nums;
+  }
+  /* Brand color tokens — set via CSS vars at runtime */
+  .text-brand { color: var(--brand); }
+  .bg-brand { background: var(--brand); }
+  .bg-brand-soft { background: var(--brand-soft); }
+  .border-brand { border-color: var(--brand); }
+}

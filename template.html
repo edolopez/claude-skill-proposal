@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="{{LANG}}">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow, noarchive" />
+  <title>Proposal — {{CLIENT_NAME}} × {{COMPANY_NAME}}</title>
+  <meta name="description" content="{{PROJECT_CODENAME}} — prepared for {{CLIENT_NAME}} by {{COMPANY_NAME}}." />
+
+  <!-- Open Graph (Slack, LinkedIn, iMessage unfurl) -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Proposal: {{PROJECT_CODENAME}}" />
+  <meta property="og:description" content="Prepared for {{CLIENT_NAME}} by {{COMPANY_NAME}}." />
+  <meta property="og:image" content="/api/og?title={{PROJECT_CODENAME_ENC}}&client={{CLIENT_NAME_ENC}}&company={{COMPANY_NAME_ENC}}&color={{BRAND_HEX_NOHASH}}&date={{PROPOSAL_DATE}}" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Precompiled Tailwind (no FOUC, no dev-mode warning) -->
+  <link rel="stylesheet" href="/assets/tailwind.css" />
+
+  <style>
+    :root {
+      --brand: {{BRAND_PRIMARY_HEX}};
+      --brand-soft: {{BRAND_PRIMARY_HEX}}14;
+    }
+    @media print {
+      .no-print { display: none !important; }
+      header.sticky { position: static !important; }
+      section { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body class="bg-white text-slate-900 antialiased">
+
+  <!-- STICKY HEADER — proposal context only, no actions -->
+  <header class="sticky top-0 z-50 border-b border-slate-200 bg-white/85 backdrop-blur supports-[backdrop-filter]:bg-white/70 no-print">
+    <div class="max-w-5xl mx-auto px-6 md:px-10 py-4 flex items-center justify-between text-sm gap-4">
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="font-semibold tracking-tight">{{COMPANY_NAME}}</div>
+        <span class="text-slate-300">·</span>
+        <div class="text-slate-600 truncate">Proposal for <span class="text-slate-900 font-medium">{{CLIENT_NAME}}</span></div>
+        <span class="hidden md:inline text-slate-300">·</span>
+        <span class="hidden md:inline num-marker text-slate-400 text-xs">v{{PROPOSAL_VERSION}}</span>
+      </div>
+      <div class="flex items-center gap-3 md:gap-4 text-slate-500 num-marker">
+        <span class="hidden md:inline">Valid until {{VALID_UNTIL_DATE}}</span>
+        <a href="mailto:{{SELLER_EMAIL}}" class="hidden sm:inline text-slate-700 hover:text-slate-900 text-xs underline underline-offset-4 decoration-slate-300">{{SELLER_EMAIL}}</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- COVER -->
+  <section class="max-w-4xl mx-auto px-6 md:px-10 pt-24 md:pt-32 pb-16">
+    <div class="text-xs uppercase tracking-[0.2em] text-slate-500 num-marker">{{PROPOSAL_DATE}} · Proposal v{{PROPOSAL_VERSION}}</div>
+    <h1 class="display text-5xl md:text-7xl mt-6 leading-[1.05]">
+      {{PROJECT_CODENAME}}
+    </h1>
+    <p class="mt-8 text-xl md:text-2xl text-slate-600 max-w-2xl leading-relaxed">
+      {{ONE_LINE_OUTCOME_SUMMARY}}
+    </p>
+    <dl class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-y-6 gap-x-8 text-sm">
+      <div>
+        <dt class="text-slate-500 uppercase tracking-wider text-xs">Prepared for</dt>
+        <dd class="mt-1.5 font-medium">{{CLIENT_CONTACT_NAME}}<br/><span class="text-slate-500 font-normal">{{CLIENT_CONTACT_TITLE}}, {{CLIENT_NAME}}</span></dd>
+      </div>
+      <div>
+        <dt class="text-slate-500 uppercase tracking-wider text-xs">Prepared by</dt>
+        <dd class="mt-1.5 font-medium">{{SELLER_NAME}}<br/><span class="text-slate-500 font-normal">{{SELLER_TITLE}}, {{COMPANY_NAME}}</span></dd>
+      </div>
+      <div>
+        <dt class="text-slate-500 uppercase tracking-wider text-xs">Engagement</dt>
+        <dd class="mt-1.5 font-medium num-marker">{{TIMELINE_TOTAL_DURATION}}</dd>
+      </div>
+      <div>
+        <dt class="text-slate-500 uppercase tracking-wider text-xs">Investment</dt>
+        <dd class="mt-1.5 font-medium num-marker">{{PRICE_HEADLINE}}</dd>
+      </div>
+    </dl>
+  </section>
+
+  <div class="rule max-w-4xl mx-auto"></div>
+
+  <!-- 1. THE SITUATION -->
+  <section id="situation" class="max-w-4xl mx-auto px-6 md:px-10 py-24 md:py-28">
+    <div class="text-xs uppercase tracking-[0.2em] text-slate-500 num-marker">01 — The situation</div>
+    <h2 class="display text-3xl md:text-5xl mt-4 leading-tight">{{SITUATION_HEADLINE}}</h2>
+    <div class="mt-8 max-w-none text-lg text-slate-700 leading-relaxed space-y-5">
+      <p>{{SITUATION_PARAGRAPH_1}}</p>
+      <p>{{SITUATION_PARAGRAPH_2}}</p>
+      <blockquote class="border-l-2 pl-6 not-italic text-slate-600" style="border-color: var(--brand)">
+        "{{BUYER_QUOTE}}"
+        <footer class="mt-2 text-sm text-slate-500">— {{BUYER_QUOTE_ATTRIBUTION}}</footer>
+      </blockquote>
+    </div>
+  </section>
+
+  <div class="rule max-w-4xl mx-auto"></div>
+
+  <!-- 2. THE OUTCOME -->
+  <section id="outcome" class="max-w-4xl mx-auto px-6 md:px-10 py-24 md:py-28">
+    <div class="text-xs uppercase tracking-[0.2em] text-slate-500 num-marker">02 — The outcome</div>
+    <h2 class="display text-3xl md:text-5xl mt-4 leading-tight">{{OUTCOME_HEADLINE}}</h2>
+    <p class="mt-8 text-lg text-slate-700 leading-relaxed max-w-3xl">{{OUTCOME_INTRO}}</p>
+    <ul class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+      <li>
+        <div class="display text-4xl num-marker" style="color: var(--brand)">{{OUTCOME_METRIC_1}}</div>
+        <p class="mt-3 text-slate-600 leading-relaxed">{{OUTCOME_DESC_1}}</p>
+      </li>
+      <li>
+        <div class="display text-4xl num-marker" style="color: var(--brand)">{{OUTCOME_METRIC_2}}</div>
+        <p class="mt-3 text-slate-600 leading-relaxed">{{OUTCOME_DESC_2}}</p>
+      </li>
+      <li>
+        <div class="display text-4xl num-marker" style="color: var(--brand)">{{OUTCOME_METRIC_3}}</div>
+        <p class="mt-3 text-slate-600 leading-relaxed">{{OUTCOME_DESC_3}}</p>
+      </li>
+    </ul>
+  </section>
+
+  <div class="rule max-w-4xl mx-auto"></div>
+
+  <!-- 3. APPROACH -->
+  <section id="approach" class="max-w-4xl mx-auto px-6 md:px-10 py-24 md:py-28">
+    <div class="text-xs uppercase tracking-[0.2em] text-slate-500 num-marker">03 — Our approach</div>
+    <h2 class="display text-3xl md:text-5xl mt-4 leading-tight">{{APPROACH_HEADLINE}}</h2>
+    <p class="mt-8 text-lg text-slate-700 leading-relaxed max-w-3xl">{{APPROACH_INTRO_PARAGRAPH}}</p>
+
+    <div class="mt-16 space-y-12">
+      <div class="grid grid-cols-[auto_1fr] gap-x-8 md:gap-x-12">
+        <div class="display text-4xl num-marker text-slate-300">01</div>
+        <div>
+          <h3 class="display text-2xl">{{PHASE_1_NAME}} <span class="text-slate-400 text-base font-normal num-marker">· {{PHASE_1_DURATION}}</span></h3>
+          <p class="mt-3 text-slate-700 leading-relaxed">{{PHASE_1_WHAT}}</p>
+          <p class="mt-3 text-slate-500 text-sm leading-relaxed"><span class="font-medium text-slate-700">Why this first:</span> {{PHASE_1_WHY}}</p>
+        </div>
+      </div>
+      <div class="grid grid-cols-[auto_1fr] gap-x-8 md:gap-x-12">
+        <div class="display text-4xl num-marker text-slate-300">02</div>
+        <div>
+          <h3 class="display text-2xl">{{PHASE_2_NAME}} <span class="text-slate-400 text-base font-normal num-marker">· {{PHASE_2_DURATION}}</span></h3>
+          <p class="mt-3 text-slate-700 leading-relaxed">{{PHASE_2_WHAT}}</p>
+          <p class="mt-3 text-slate-500 text-sm leading-relaxed"><span class="font-medium text-slate-700">Why now:</span> {{PHASE_2_WHY}}</p>
+        </div>
+      </div>
+      <div class="grid grid-cols-[auto_1fr] gap-x-8 md:gap-x-12">
+        <div class="display text-4xl num-marker text-slate-300">03</div>
+        <div>
+          <h3 class="display text-2xl">{{PHASE_3_NAME}} <span class="text-slate-400 text-base font-normal num-marker">· {{PHASE_3_DURATION}}</span></h3>
+          <p class="mt-3 text-slate-700 leading-relaxed">{{PHASE_3_WHAT}}</p>
+          <p class="mt-3 text-slate-500 text-sm leading-relaxed"><span class="font-medium text-slate-700">Why last:</span> {{PHASE_3_WHY}}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="rule max-w-4xl mx-auto"></div>
+
+  <!-- 4. DELIVERABLES -->
+  <section id="deliverables" class="max-w-4xl mx-auto px-6 md:px-10 py-24 md:py-28">
+    <div class="text-xs uppercase tracking-[0.2em] text-slate-500 num-marker">04 — What you receive</div>
+    <h2 class="display text-3xl md:text-5xl mt-4 leading-tight">Deliverables</h2>
+    <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
+      <div class="border-t border-slate-200 pt-4">
+        <div class="flex items-baseline justify-between gap-4">
+          <div class="font-medium">{{DELIVERABLE_1_NAME}}</div>
+          <div class="text-sm text-slate-500 num-marker">{{DELIVERABLE_1_COUNT}}</div>
+        </div>
+        <p class="mt-1.5 text-sm text-slate-600">{{DELIVERABLE_1_DETAIL}}</p>
+      </div>
+      <div class="border-t border-slate-200 pt-4">
+        <div class="flex items-baseline justify-between gap-4">
+          <div class="font-medium">{{DELIVERABLE_2_NAME}}</div>
+          <div class="text-sm text-slate-500 num-marker">{{DELIVERABLE_2_COUNT}}</div>
+        </div>
+        <p class="mt-1.5 text-sm text-slate-600">{{DELIVERABLE_2_DETAIL}}</p>
+      </div>
+      <div class="border-t border-slate-200 pt-4">
+        <div class="flex items-baseline justify-between gap-4">
+          <div class="font-medium">{{DELIVERABLE_3_NAME}}</div>
+          <div class="text-sm text-slate-500 num-marker">{{DELIVERABLE_3_COUNT}}</div>
+        </div>
+        <p class="mt-1.5 text-sm text-slate-600">{{DELIVERABLE_3_DETAIL}}</p>
+      </div>
+      <div class="border-t border-slate-200 pt-4">
+        <div class="flex items-baseline justify-between gap-4">
+          <div class="font-medium">{{DELIVERABLE_4_NAME}}</div>
+          <div class="text-sm text-slate-500 num-marker">{{DELIVERABLE_4_COUNT}}</div>
+        </div>
+        <p class="mt-1.5 text-sm text-slate-600">{{DELIVERABLE_4_DETAIL}}</p>
+      </div>
+      <div class="border-t border-slate-200 pt-4">
+        <div class="flex items-baseline justify-between gap-4">
+          <div class="font-medium">{{DELIVERABLE_5_NAME}}</div>
+          <div class="text-sm text-slate-500 num-marker">{{DELIVERABLE_5_COUNT}}</div>
+        </div>
+        <p class="mt-1.5 text-sm text-slate-600">{{DELIVERABLE_5_DETAIL}}</p>
+      </div>
+      <div class="border-t border-slate-200 pt-4">
+        <div class="flex items-baseline justify-between gap-4">
+          <div class="font-medium">{{DELIVERABLE_6_NAME}}</div>
+          <div class="text-sm text-slate-500 num-marker">{{DELIVERABLE_6_COUNT}}</div>
+        </div>
+        <p class="mt-1.5 text-sm text-slate-600">{{DELIVERABLE_6_DETAIL}}</p>
+      </div>
+    </div>
+
+    <div class="mt-12 rounded-md bg-slate-50 border border-slate-200 p-6">
+      <div class="text-xs uppercase tracking-wider text-slate-500 font-medium">Out of scope</div>
+      <p class="mt-2 text-sm text-slate-700 leading-relaxed">{{OUT_OF_SCOPE}}</p>
+    </div>
+  </section>
+
+  <div class="rule max-w-4xl mx-auto"></div>
+
+  <!-- 5. TIMELINE -->
+  <section id="timeline" class="max-w-4xl mx-auto px-6 md:px-10 py-24 md:py-28">
+    <div class="text-xs uppercase tracking-[0.2em] text-slate-500 num-marker">05 — Timeline</div>
+    <h2 class="display text-3xl md:text-5xl mt-4 leading-tight">{{TIMELINE_TOTAL_DURATION}}, end-to-end</h2>
+    <p class="mt-8 text-lg text-slate-700 leading-relaxed max-w-3xl">{{TIMELINE_INTRO}}</p>
+
+    <ol class="mt-12 space-y-6">
+      <li class="grid grid-cols-[120px_1fr] gap-6 border-t border-slate-200 pt-5">
+        <div class="num-marker text-sm font-medium" style="color: var(--brand)">{{MILESTONE_1_DATE}}</div>
+        <div>
+          <div class="font-medium">{{MILESTONE_1_NAME}}</div>
+          <p class="mt-1 text-sm text-slate-600">{{MILESTONE_1_DETAIL}}</p>
+        </div>
+      </li>
+      <li class="grid grid-cols-[120px_1fr] gap-6 border-t border-slate-200 pt-5">
+        <div class="num-marker text-sm font-medium" style="color: var(--brand)">{{MILESTONE_2_DATE}}</div>
+        <div>
+          <div class="font-medium">{{MILESTONE_2_NAME}}</div>
+          <p class="mt-1 text-sm text-slate-600">{{MILESTONE_2_DETAIL}}</p>
+        </div>
+      </li>
+      <li class="grid grid-cols-[120px_1fr] gap-6 border-t border-slate-200 pt-5">
+        <div class="num-marker text-sm font-medium" style="color: var(--brand)">{{MILESTONE_3_DATE}}</div>
+        <div>
+          <div class="font-medium">{{MILESTONE_3_NAME}}</div>
+          <p class="mt-1 text-sm text-slate-600">{{MILESTONE_3_DETAIL}}</p>
+        </div>
+      </li>
+      <li class="grid grid-cols-[120px_1fr] gap-6 border-t border-slate-200 pt-5">
+        <div class="num-marker text-sm font-medium" style="color: var(--brand)">{{MILESTONE_4_DATE}}</div>
+        <div>
+          <div class="font-medium">{{MILESTONE_4_NAME}}</div>
+          <p class="mt-1 text-sm text-slate-600">{{MILESTONE_4_DETAIL}}</p>
+        </div>
+      </li>
+    </ol>
+
+    <div class="mt-10 text-sm text-slate-500 leading-relaxed">
+      <span class="font-medium text-slate-700">Dependencies that could shift the timeline:</span> {{TIMELINE_DEPENDENCIES}}
+    </div>
+  </section>
+
+  <div class="rule max-w-4xl mx-auto"></div>
+
+  <!-- 6. INVESTMENT -->
+  <section id="investment" class="max-w-4xl mx-auto px-6 md:px-10 py-24 md:py-28">
+    <div class="text-xs uppercase tracking-[0.2em] text-slate-500 num-marker">06 — Investment</div>
+    <h2 class="display text-3xl md:text-5xl mt-4 leading-tight">Investment</h2>
+
+    <div class="mt-12 rounded-lg border border-slate-200 overflow-hidden">
+      <div class="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 p-8 md:p-10" style="background: var(--brand-soft)">
+        <div>
+          <div class="text-sm uppercase tracking-wider text-slate-600 font-medium">{{PRICING_TIER_NAME}}</div>
+          <p class="mt-3 text-slate-700 leading-relaxed max-w-xl">{{PRICING_TIER_DESCRIPTION}}</p>
+        </div>
+        <div class="md:text-right">
+          <div class="display text-5xl md:text-6xl num-marker" style="color: var(--brand)">{{PRICE_HEADLINE}}</div>
+          <div class="mt-2 text-sm text-slate-500 num-marker">{{PRICE_TERMS}}</div>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-3 p-8 md:p-10 text-sm">
+        <div class="md:col-span-2 text-xs uppercase tracking-wider text-slate-500 font-medium mb-1">Includes</div>
+        <div class="flex gap-3"><span style="color: var(--brand)">✓</span><span>{{INCLUDES_1}}</span></div>
+        <div class="flex gap-3"><span style="color: var(--brand)">✓</span><span>{{INCLUDES_2}}</span></div>
+        <div class="flex gap-3"><span style="color: var(--brand)">✓</span><span>{{INCLUDES_3}}</span></div>
+        <div class="flex gap-3"><span style="color: var(--brand)">✓</span><span>{{INCLUDES_4}}</span></div>
+        <div class="flex gap-3"><span style="color: var(--brand)">✓</span><span>{{INCLUDES_5}}</span></div>
+        <div class="flex gap-3"><span style="color: var(--brand)">✓</span><span>{{INCLUDES_6}}</span></div>
+      </div>
+    </div>
+
+    <p class="mt-8 text-sm text-slate-500 leading-relaxed">
+      <span class="font-medium text-slate-700">Payment terms:</span> {{PAYMENT_TERMS}}.
+      <span class="font-medium text-slate-700">Scope changes:</span> {{SCOPE_CHANGE_POLICY}}.
+    </p>
+  </section>
+
+  <div class="rule max-w-4xl mx-auto"></div>
+
+  <!-- 7. WHY US -->
+  <section id="why-us" class="max-w-4xl mx-auto px-6 md:px-10 py-24 md:py-28">
+    <div class="text-xs uppercase tracking-[0.2em] text-slate-500 num-marker">07 — Why us</div>
+    <h2 class="display text-3xl md:text-5xl mt-4 leading-tight">{{WHY_US_HEADLINE}}</h2>
+    <p class="mt-8 text-lg text-slate-700 leading-relaxed max-w-3xl">{{WHY_US_INTRO}}</p>
+
+    <div class="mt-16 space-y-12">
+      <article class="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-8 border-t border-slate-200 pt-10">
+        <div>
+          <div class="text-xs uppercase tracking-wider text-slate-500">Case study</div>
+          <div class="mt-2 display text-2xl">{{CASE_1_CLIENT}}</div>
+          <div class="mt-1 text-sm text-slate-500">{{CASE_1_INDUSTRY}}</div>
+        </div>
+        <div>
+          <p class="text-slate-700 leading-relaxed">{{CASE_1_NARRATIVE}}</p>
+          <div class="mt-5 display text-3xl num-marker" style="color: var(--brand)">{{CASE_1_RESULT_METRIC}}</div>
+          <div class="text-sm text-slate-500">{{CASE_1_RESULT_LABEL}}</div>
+        </div>
+      </article>
+      <article class="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-8 border-t border-slate-200 pt-10">
+        <div>
+          <div class="text-xs uppercase tracking-wider text-slate-500">Case study</div>
+          <div class="mt-2 display text-2xl">{{CASE_2_CLIENT}}</div>
+          <div class="mt-1 text-sm text-slate-500">{{CASE_2_INDUSTRY}}</div>
+        </div>
+        <div>
+          <p class="text-slate-700 leading-relaxed">{{CASE_2_NARRATIVE}}</p>
+          <div class="mt-5 display text-3xl num-marker" style="color: var(--brand)">{{CASE_2_RESULT_METRIC}}</div>
+          <div class="text-sm text-slate-500">{{CASE_2_RESULT_LABEL}}</div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <div class="rule max-w-4xl mx-auto"></div>
+
+  <!-- 8. RISKS -->
+  <section id="risks" class="max-w-4xl mx-auto px-6 md:px-10 py-24 md:py-28">
+    <div class="text-xs uppercase tracking-[0.2em] text-slate-500 num-marker">08 — Risks &amp; how we handle them</div>
+    <h2 class="display text-3xl md:text-5xl mt-4 leading-tight">What could go wrong</h2>
+    <p class="mt-8 text-lg text-slate-700 leading-relaxed max-w-3xl">Every engagement carries risk. Here's what we see, and the mechanism that contains it.</p>
+
+    <div class="mt-12 space-y-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-slate-200 pt-6">
+        <div>
+          <div class="text-xs uppercase tracking-wider text-slate-500 font-medium">Risk</div>
+          <p class="mt-2 font-medium">{{RISK_1_NAME}}</p>
+          <p class="mt-1 text-sm text-slate-600 leading-relaxed">{{RISK_1_DETAIL}}</p>
+        </div>
+        <div>
+          <div class="text-xs uppercase tracking-wider font-medium" style="color: var(--brand)">Mitigation</div>
+          <p class="mt-2 text-sm text-slate-700 leading-relaxed">{{RISK_1_MITIGATION}}</p>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-slate-200 pt-6">
+        <div>
+          <div class="text-xs uppercase tracking-wider text-slate-500 font-medium">Risk</div>
+          <p class="mt-2 font-medium">{{RISK_2_NAME}}</p>
+          <p class="mt-1 text-sm text-slate-600 leading-relaxed">{{RISK_2_DETAIL}}</p>
+        </div>
+        <div>
+          <div class="text-xs uppercase tracking-wider font-medium" style="color: var(--brand)">Mitigation</div>
+          <p class="mt-2 text-sm text-slate-700 leading-relaxed">{{RISK_2_MITIGATION}}</p>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-slate-200 pt-6">
+        <div>
+          <div class="text-xs uppercase tracking-wider text-slate-500 font-medium">Risk</div>
+          <p class="mt-2 font-medium">{{RISK_3_NAME}}</p>
+          <p class="mt-1 text-sm text-slate-600 leading-relaxed">{{RISK_3_DETAIL}}</p>
+        </div>
+        <div>
+          <div class="text-xs uppercase tracking-wider font-medium" style="color: var(--brand)">Mitigation</div>
+          <p class="mt-2 text-sm text-slate-700 leading-relaxed">{{RISK_3_MITIGATION}}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="rule max-w-4xl mx-auto"></div>
+
+  <!-- 9. NEXT STEP — accept form -->
+  <section id="next-step" class="max-w-4xl mx-auto px-6 md:px-10 py-28 md:py-36">
+    <div class="text-xs uppercase tracking-[0.2em] text-slate-500 num-marker">09 — Next step</div>
+    <h2 class="display text-4xl md:text-6xl mt-4 leading-[1.05]">{{NEXT_STEP_HEADLINE}}</h2>
+    <p class="mt-8 text-lg text-slate-700 leading-relaxed max-w-2xl">{{NEXT_STEP_DETAIL}}</p>
+
+    <p class="mt-12 text-base md:text-lg text-slate-700 leading-relaxed">
+      Reply to <a href="mailto:{{SELLER_EMAIL}}?subject=Re%3A%20{{PROJECT_CODENAME_ENC}}" class="font-medium" style="color: var(--brand)">{{SELLER_EMAIL}}</a> by <span class="num-marker font-medium">{{VALID_UNTIL_DATE}}</span> to confirm.
+    </p>
+  </section>
+
+  <!-- TERMS APPENDIX (optional, collapsible) -->
+  {{#if TERMS_INCLUDE}}
+  <div class="rule max-w-4xl mx-auto"></div>
+  <section id="terms" class="max-w-4xl mx-auto px-6 md:px-10 py-20">
+    <details class="group">
+      <summary class="cursor-pointer list-none flex items-center justify-between gap-4 py-3 border-b border-slate-200">
+        <div>
+          <div class="text-xs uppercase tracking-[0.2em] text-slate-500 num-marker">Appendix</div>
+          <h3 class="display text-2xl mt-2">Terms &amp; Conditions</h3>
+        </div>
+        <span class="text-slate-400 text-sm group-open:rotate-180 transition-transform">▼</span>
+      </summary>
+      <div class="mt-8 text-sm text-slate-700 leading-relaxed space-y-6">
+        <div>
+          <h4 class="font-medium text-slate-900 uppercase tracking-wider text-xs">IP Ownership</h4>
+          <p class="mt-2">{{TERMS_IP_OWNERSHIP}}</p>
+        </div>
+        <div>
+          <h4 class="font-medium text-slate-900 uppercase tracking-wider text-xs">Confidentiality</h4>
+          <p class="mt-2">{{TERMS_CONFIDENTIALITY}}</p>
+        </div>
+        <div>
+          <h4 class="font-medium text-slate-900 uppercase tracking-wider text-xs">Termination</h4>
+          <p class="mt-2">{{TERMS_TERMINATION}}</p>
+        </div>
+        <div>
+          <h4 class="font-medium text-slate-900 uppercase tracking-wider text-xs">Governing Law</h4>
+          <p class="mt-2">{{TERMS_GOVERNING_LAW}}</p>
+        </div>
+      </div>
+    </details>
+  </section>
+  {{/if}}
+
+  <!-- FOOTER -->
+  <footer class="border-t border-slate-200 mt-12">
+    <div class="max-w-4xl mx-auto px-6 md:px-10 py-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
+      <div>
+        <div class="font-semibold">{{COMPANY_NAME}}</div>
+        <p class="mt-2 text-slate-500 leading-relaxed">{{COMPANY_TAGLINE}}</p>
+      </div>
+      <div>
+        <div class="text-slate-500 uppercase tracking-wider text-xs">Contact</div>
+        <p class="mt-2 leading-relaxed">
+          {{SELLER_NAME}}<br/>
+          <a href="mailto:{{SELLER_EMAIL}}" class="underline underline-offset-4 decoration-slate-300">{{SELLER_EMAIL}}</a>
+        </p>
+      </div>
+      <div>
+        <div class="text-slate-500 uppercase tracking-wider text-xs">Proposal details</div>
+        <p class="mt-2 text-slate-500 leading-relaxed num-marker">
+          Issued {{PROPOSAL_DATE}}<br/>
+          Valid until {{VALID_UNTIL_DATE}}<br/>
+          Reference: {{PROPOSAL_REFERENCE}}
+        </p>
+      </div>
+    </div>
+    <div class="border-t border-slate-200">
+      <div class="max-w-4xl mx-auto px-6 md:px-10 py-6 text-xs text-slate-400 num-marker">
+        © {{YEAR}} {{COMPANY_NAME}}. Confidential. For {{CLIENT_NAME}} only.
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
