@@ -6,7 +6,8 @@ A Claude Code skill that turns a sales conversation into a beautiful, single-pag
 /proposal                                    # full new flow (discovery → render → critique)
 /proposal "Acme Corp"                        # pre-fill the client name
 /proposal --meetings <url|path>,...          # draft discovery from Circleback transcripts or meeting notes
-/proposal --theme technical|minimal          # swap the visual theme (editorial is default)
+/proposal --theme technical|minimal|icalia   # swap the visual theme (editorial is default)
+/proposal --icalia                           # shorthand for --theme icalia (Icalia Labs house theme)
 /proposal --revise <slug>                    # update an existing proposal, snapshot prior version
 /proposal --revise <slug> --meetings <url>   # revise with new meeting context
 /proposal --clone <slug>                     # start a new proposal from an existing one
@@ -14,7 +15,7 @@ A Claude Code skill that turns a sales conversation into a beautiful, single-pag
 
 ## What it does
 
-Walks the seller through a 3-chunk discovery interview (setup → buyer story → scope), optionally sourcing answers from Circleback transcripts or meeting notes via the `--meetings` flag. Extracts brand colors from the client's website (with WCAG contrast warnings). Generates a Tailwind-built single-page HTML proposal from a canonical template, applying one of three visual themes (`editorial`, `technical`, `minimal`) via the `--theme` flag. Runs the `/critique` design skill to grade and fix the output, and deploys to Vercel.
+Walks the seller through a 3-chunk discovery interview (setup → buyer story → scope), optionally sourcing answers from Circleback transcripts or meeting notes via the `--meetings` flag. Extracts brand colors from the client's website (with WCAG contrast warnings). Generates a Tailwind-built single-page HTML proposal from a canonical template, applying one of four visual themes (`editorial`, `technical`, `minimal`, `icalia`) via the `--theme` flag. Runs the `/critique` design skill to grade and fix the output, and deploys to Vercel.
 
 The proposal itself is **read-only** — there are no live buttons, no acceptance tracking, no analytics. The seller emails or pastes a URL; the buyer reads it like a beautifully-typeset PDF and replies through the existing email thread.
 
@@ -23,7 +24,7 @@ Designed around one principle: **a proposal does not close a deal — the conver
 ### Features
 
 - **Transcript ingestion** — pass `--meetings <circleback-url|local-file>,...` to draft discovery answers from prior conversations instead of re-interviewing the seller end-to-end. Supports Circleback URLs (via the MCP connector) and local meeting notes (`.txt`, `.md`, `.vtt`, `.srt`, `.json`). Surfaces cross-meeting conflicts for the seller to resolve.
-- **Visual theming** — apply `--theme technical` (dark page, IBM Plex, monospace numerals) or `--theme minimal` (sans-only, neutral grays) to swap the visual layer without touching content structure. Default `editorial` theme is the current look.
+- **Visual theming** — apply `--theme technical` (dark page, IBM Plex, monospace numerals), `--theme minimal` (sans-only, neutral grays), or `--theme icalia` / `--icalia` (Inter Black display, Trebuchet eyebrows, navy + red, fixed left accent bar — Icalia Labs house look) to swap the visual layer without touching content structure. The `icalia` theme also auto-falls-back when the buyer has no brand identity (no extractable site, pre-launch, stealth) so the proposal still ships with a coherent visual register. Default `editorial` theme is the current look.
 - **Version snapshots** — `--revise` snapshots the prior HTML to `versions/v{n}.html` so buyers can audit change history.
 - **Dynamic OG images** — proposals generate Slack/email unfurls with the project name, client, and brand color.
 
@@ -73,7 +74,7 @@ The flow gracefully degrades: without Vercel CLI you can still generate proposal
 | File | What it controls |
 |---|---|
 | `template.html` | The proposal's HTML structure, sections, and Tailwind classes; includes placeholders for theme fonts and CSS |
-| `themes/editorial.json`, `themes/technical.json`, `themes/minimal.json` | Predefined visual themes (v1). Control typography, color scale, eyebrow treatment, and page background. Edit or extend to customize the looks. |
+| `themes/editorial.json`, `themes/technical.json`, `themes/minimal.json`, `themes/icalia.json` | Predefined visual themes. Control typography, color scale, eyebrow treatment, and page background. Edit or extend to customize the looks. The `icalia` theme additionally exposes `default_brand_color` and `fallback_brand_when_unidentified` so it can render without a buyer-supplied brand. |
 | `tailwind-input.css` | Custom CSS layered on top of Tailwind base |
 | `examples/*.html` | Reference proposals across industries (SaaS, agency, services). Read these to anchor your taste before editing the template. |
 | `vercel-starter/vercel.json` | Deploy config: clean URLs, security headers, asset caching |
@@ -110,7 +111,7 @@ A shipping-ready proposal hits all of these:
 - Pricing is on the page (not "contact us")
 - Each section ties to a specific objection it pre-empts for the champion
 - `/critique` rates every dimension 8+/10
-- Brand color passes WCAG AA contrast on its **given theme background** (the extractor flags this; dark themes like `technical` require re-testing against `#0B0F19`)
+- Brand color passes WCAG AA contrast on its **given theme background** (the extractor flags this; dark themes like `technical` require re-testing against `#0B0F19`; the `icalia` theme defaults to `#CC3239` which passes AA on white at 5.14:1)
 - Mobile view at 375px doesn't break the timeline or pricing block
 - Theme choice (if not `editorial`) is documented for the buyer's context
 
