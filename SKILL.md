@@ -1,7 +1,7 @@
 ---
 name: proposal
-description: Generate beautiful single-page client proposals as a document-format replacement for PDFs and Google Docs. Persists answers, fetches brand colors from the client's site (with WCAG contrast warnings), generates a Tailwind-built single-page HTML, and runs the `/critique` design skill via the Skill tool to grade and fix the output. Includes dynamic OG images for unfurls and version-history snapshots on revise. Use when the user says "create a proposal", "client proposal", "scope of work", "SOW", or "pitch document". Use `/proposal --revise <slug>` to update an existing proposal, `/proposal --clone <slug>` to start a new one from an existing discovery, or `/proposal --theme <name>` to swap the visual theme (editorial, technical, minimal).
-argument-hint: [client name | --revise <slug> | --clone <slug>] [--theme editorial|technical|minimal]
+description: Generate beautiful single-page client proposals as a document-format replacement for PDFs and Google Docs. Persists answers, fetches brand colors from the client's site (with WCAG contrast warnings), generates a Tailwind-built single-page HTML, and runs the `/critique` design skill via the Skill tool to grade and fix the output. Includes dynamic OG images for unfurls and version-history snapshots on revise. Use when the user says "create a proposal", "client proposal", "scope of work", "SOW", or "pitch document". Use `/proposal --revise <slug>` to update an existing proposal, `/proposal --clone <slug>` to start a new one from an existing discovery, or `/proposal --theme <name>` to swap the visual theme (editorial, technical, minimal, icalia). The `--icalia` shorthand applies the Icalia Labs house theme — also the automatic fallback when the client has no brand identity of their own.
+argument-hint: [client name | --revise <slug> | --clone <slug>] [--theme editorial|technical|minimal|icalia | --icalia]
 ---
 
 # /proposal
@@ -29,7 +29,8 @@ seller-defaults.json              ← persisted seller info — auto-loaded if p
 themes/
   ├── editorial.json              ← default theme (Fraunces + Inter, white)
   ├── technical.json              ← dark + IBM Plex + JetBrains Mono numerals
-  └── minimal.json                ← Inter only, neutral grays, sentence-case eyebrows
+  ├── minimal.json                ← Inter only, neutral grays, sentence-case eyebrows
+  └── icalia.json                 ← Icalia Labs house theme — Inter Black, navy + red, fixed left accent bar; auto-fallback when buyer has no brand
 examples/
   ├── saas-acme.html              ← reference: SaaS implementation pattern
   ├── agency-globex.html          ← reference: agency/creative pattern
@@ -62,7 +63,8 @@ vercel-starter/
 | `/proposal Acme Corp` | Same, with client name pre-filled |
 | `/proposal --revise <slug>` | Load `proposals/<slug>/discovery.json`, ask what's changed, snapshot current to `versions/v{n}.html`, regenerate, redeploy |
 | `/proposal --clone <slug>` | Load `proposals/<slug>/discovery.json` as a starting point, ask what's different, save to a NEW slug |
-| `/proposal --theme <name>` | Apply a visual theme at render time. `<name>` is one of `editorial` (default), `technical`, or `minimal`. Combinable with all of the above. |
+| `/proposal --theme <name>` | Apply a visual theme at render time. `<name>` is one of `editorial` (default), `technical`, `minimal`, or `icalia`. Combinable with all of the above. |
+| `/proposal --icalia` | Shorthand for `--theme icalia`. Applies the Icalia Labs house theme (Inter Black display, Trebuchet eyebrows, navy + red, fixed left accent bar). Also the **automatic fallback** when the buyer has no brand identity surfaced during Step 3 (no extractable site, or seller declines all candidates). |
 
 ## The flow
 
@@ -124,9 +126,11 @@ Themes control the **visual layer only** — typography, color scale, eyebrow tr
 
 ### Resolve the theme
 
-1. If `--theme <name>` was passed → use that name. Validate against the enum below.
-2. Else if `--revise` was used and `proposals/<slug>/discovery.json` already has `project.theme` → reuse it.
-3. Else → default to `editorial`.
+1. If `--icalia` shorthand was passed → resolve to `icalia`.
+2. Else if `--theme <name>` was passed → use that name. Validate against the enum below.
+3. Else if `--revise` was used and `proposals/<slug>/discovery.json` already has `project.theme` → reuse it.
+4. Else if Step 3 (brand color extraction) returns **no usable brand** for the buyer (no website, or seller declines all candidates and there is no prior `project.theme`) → fall back to `icalia`. The Icalia theme defines `default_brand_color` `#CC3239` so the doc still has an accent without one being supplied. Tell the seller: *"No brand surfaced for the buyer — falling back to the `icalia` house theme. Pass `--theme editorial` or `--theme minimal` to override."*
+5. Else → default to `editorial`.
 
 Valid theme names (v1):
 
@@ -135,8 +139,9 @@ Valid theme names (v1):
 | `editorial` *(default)* | Fraunces serif headlines + Inter body, white page, slate text, brand color as quiet accent. | Generalist — founders, execs, most B2B buyers. The current/legacy look. |
 | `technical` | IBM Plex Sans + JetBrains Mono numerals on a deep slate background (`#0B0F19`). Tabular monospace prices and dates. Reads like internal engineering documentation. | SaaS, dev-tools, implementation deals where the buyer is technical (CTO, eng-lead, platform). |
 | `minimal` | Inter for both display and body — no serif anywhere. Neutral-gray scale (instead of slate), sentence-case eyebrows (instead of uppercase tracked), tighter display tracking. | Design-conscious modern startups. When the proposal itself should feel minimal. |
+| `icalia` | Inter Black (900) display, Trebuchet MS eyebrow caps, white page with deep navy (`#1C2333`) inset surfaces and Icalia red (`#CC3239`) brand accent. Fixed 4px left red accent bar runs the full viewport as a continuous brand signal. Default brand color when none is supplied. | Icalia Labs house look. Buyers without brand identity (pre-launch, stealth, no website). When the seller wants the Icalia visual register (executive, restrained, factual). |
 
-If the user passes an unknown `--theme`, abort with: *"`--theme <name>` not recognized. Available themes: `editorial`, `technical`, `minimal`. Pass one of these or omit the flag for the editorial default."*
+If the user passes an unknown `--theme`, abort with: *"`--theme <name>` not recognized. Available themes: `editorial`, `technical`, `minimal`, `icalia`. Pass one of these or omit the flag for the editorial default."*
 
 ### Load the theme spec
 
@@ -166,6 +171,7 @@ If `--theme` was not passed, after Chunk A captures `industry`, the skill MAY su
 |---|---|
 | `saas`, `implementation` | `technical` worth offering |
 | `agency_creative`, `ecommerce` | `minimal` worth offering |
+| Buyer has no brand / no website / pre-launch | `icalia` worth offering |
 | Everything else | `editorial` |
 
 The phrasing should be a single line: *"Industry is SaaS — want to use the `technical` theme (dark, IBM Plex, mono numerals) instead of the default editorial look? (Y/n)"*. If the seller declines, stay on `editorial`.
@@ -252,7 +258,9 @@ The script returns 5–10 candidates with WCAG contrast flags:
 **Rules:**
 - Only pick a `✓ safe` candidate as PRIMARY (used on the brand button is gone, but emphasis numbers and price still inherit `--brand` color).
 - If the seller insists on a `⚠` color, use it as ACCENT only, never as PRIMARY.
-- If no website yet, default to `#0F172A` slate primary (or `#FFFFFF` text accent for the `technical` theme).
+- If no website yet (or no usable brand surfaces), and the active theme is `icalia`, default to `#CC3239` (Icalia red) as primary and `#1C2333` (navy) as the inset surface — both already declared by the theme's `default_brand_color` and `--icalia-navy` CSS variable.
+- If no website yet and a non-Icalia theme is active, default to `#0F172A` slate primary (or `#FFFFFF` text accent for the `technical` theme).
+- The unbranded-buyer fallback automatically promotes the active theme to `icalia` (see Step 1.6), so this path is rare.
 - Brand color is an accent, not a hero. Used only on: pull-quote left border, large outcome metrics, milestone dates, ✓ checkmarks, mitigation eyebrow, pricing headline, footer year. Everything else is grayscale.
 
 **Theme-aware contrast**: the WCAG check must compare the chosen brand color against the **theme's `page_bg`**, not always white. For the `technical` theme (`#0B0F19`), a hex like `#0B5FFF` that's "✓ safe on white" may fail on dark — re-test against the theme background and prefer brighter, higher-luminance candidates. Each theme JSON exposes `page_bg` for this lookup; the `technical.json` theme also includes a `wcag_note` with explicit guidance.
